@@ -11,7 +11,7 @@ module top (
 	input [1:0] dmode, // DMA transfer mode
 	input dreq_, // DMA request (*)
 	output eop_, // DMA complete
-	input reset_, input clk,	
+	input reset_, input clk
 );	
 
 // Initiator 2

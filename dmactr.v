@@ -18,40 +18,59 @@ module dmactr (
 	input reset_, input clk
 );
 
-// Not implemented yet
+localparam BURST_SIZE = 4;
 
 reg [1:0] state;
+reg [1:0] count;                        // word counter for burst
+reg [`BUS_ADDR_WIDTH-1:0] src, dst;     // current src/dst addresses
 
 always @ (posedge clk)
 	if (reset_ == `Enable_) begin
-		eop_ <= `Disable_;
-		rw_ <= `Write;
-		addr <= 0;
+		eop_  <= `Disable_;
+		breq_ <= `Disable_;
+		rw_   <= `Write;
+		odata <= 0;
+		addr  <= 0;
+		count <= 0;
+		src   <= 0;
+		dst   <= 0;
 		state <= `WAIT;
 	end else begin
 		case (state)
 		`WAIT: begin
 			if (dreq_ == `Enable_) begin
 				breq_ <= `Enable_;
+				src   <= dsaddr;   // latch addresses at request time
+				dst   <= ddaddr;
+				count <= 0;
 				state <= `READ1;
 			end
 			eop_ <= `Disable_;
 		end
 		`READ1: begin
 			if (bgrt_ == `Enable_) begin
-				addr <= dsaddr;
-				rw_	<= `Read;
+				addr  <= src;
+				rw_   <= `Read;
 				state <= `WRITE1;
 			end
 		end
 		`WRITE1: begin
-			addr <= ddaddr;
-			rw_ <= `Write;
+			addr  <= dst;
+			rw_   <= `Write;
 			odata <= idata;
-			state <= `DONE;
+			if (dmode == 2'b00 || count == BURST_SIZE - 1) begin
+				// single mode, or last word of burst
+				state <= `DONE;
+			end else begin
+				// increment addresses for next burst word
+				if (dmode == 2'b01 || dmode == 2'b10) src <= src + 1;
+				if (dmode == 2'b01 || dmode == 2'b11) dst <= dst + 1;
+				count <= count + 1;
+				state <= `READ1;
+			end
 		end
 		`DONE: begin
-			eop_ <= `Enable_;
+			eop_  <= `Enable_;
 			breq_ <= `Disable_;
 			state <= `WAIT;
 		end

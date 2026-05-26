@@ -60,7 +60,7 @@ initial begin
 	// breq0_ must be de-asserted so DMAC can win bus arbitration
 	dsaddr = 10'h150;
 	ddaddr = 10'h160;
-	dmode  = 2'b01;        // burst memory-to-memory
+	dmode  = 2'b00;        // burst memory-to-memory
 	dreq_  = `Enable_;
 	@(posedge clk);        // DMAC sees dreq_, asserts breq_
 	dreq_  = `Disable_;    // de-assert immediately to prevent re-trigger

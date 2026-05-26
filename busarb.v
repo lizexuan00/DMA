@@ -9,7 +9,7 @@ module busarb (
 reg state;
 
 assign bgrt0_ = (state == `BGRT0) ? `Enable_ : `Disable_;
-assign bgrt1_ = (state == `BGRT0) ? `Enable_ : `Disable_;
+assign bgrt1_ = (state == `BGRT1) ? `Enable_ : `Disable_;
 
 always @ (posedge clk)
 	if (reset_ == `Enable_) begin

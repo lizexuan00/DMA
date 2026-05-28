@@ -1,5 +1,5 @@
 $date
-	Tue May 26 17:05:42 2026
+	Tue May 26 17:08:50 2026
 $end
 $version
 	Icarus Verilog
@@ -184,19 +184,19 @@ $end
 #200
 b0 ;
 b0 H
+1-
 0A
 1@
 1?
 1>
-1-
-b0 C
-b0 F
-b0 I
 0J
 0L
 0M
 05
 14
+b0 C
+b0 F
+b0 I
 b0 7
 b0 8
 b0 B
